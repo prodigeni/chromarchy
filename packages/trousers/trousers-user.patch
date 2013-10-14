@@ -1,0 +1,28 @@
+diff -Naur1 trousers/dist/Makefile.am trousers-user/dist/Makefile.am
+--- trousers/dist/Makefile.am	2013-04-07 11:09:47.055005456 -0800
++++ trousers-user/dist/Makefile.am	2013-04-14 09:49:54.472293516 -0800
+@@ -3,4 +3,2 @@
+ 	if test ! -e ${DESTDIR}/@sysconfdir@/tcsd.conf; then mkdir -p ${DESTDIR}/@sysconfdir@ && cp tcsd.conf ${DESTDIR}/@sysconfdir@; fi
+-	/bin/chown tss:tss ${DESTDIR}/@sysconfdir@/tcsd.conf
+-	/bin/chmod 0600 ${DESTDIR}/@sysconfdir@/tcsd.conf
+ 
+@@ -9,9 +7,4 @@
+ 	/usr/sbin/useradd -r tss -g tss || true
+-	/bin/chown tss:tss ${DESTDIR}/@sbindir@/tcsd
+ 	/bin/sh -c 'if [ ! -e ${DESTDIR}/@localstatedir@/lib/tpm ];then mkdir -p ${DESTDIR}/@localstatedir@/lib/tpm; fi'
+-	/bin/chown tss:tss ${DESTDIR}/@localstatedir@/lib/tpm
+-	/bin/chmod 0700 ${DESTDIR}/@localstatedir@/lib/tpm
+ 
+ uninstall-hook:
+-	/usr/sbin/userdel tss
+-	/usr/sbin/groupdel tss
+diff -Naur1 trousers/src/include/tcsd.h trousers-user/src/include/tcsd.h
+--- trousers/src/include/tcsd.h	2013-04-07 11:09:47.090005456 -0800
++++ trousers-user/src/include/tcsd.h	2013-04-14 10:17:43.747294312 -0800
+@@ -52,4 +52,4 @@
+ 
+-#define TSS_USER_NAME		"tss"
+-#define TSS_GROUP_NAME		"tss"
++#define TSS_USER_NAME		"root"
++#define TSS_GROUP_NAME		"root"
+ 

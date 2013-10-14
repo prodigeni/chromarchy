@@ -1,0 +1,12 @@
+diff -Naur power_manager/common.mk power_manager_fixed/common.mk
+--- power_manager/common.mk	2013-04-07 15:09:58.620002426 -0800
++++ power_manager_fixed/common.mk	2013-04-07 15:10:45.275002336 -0800
+@@ -260,7 +260,7 @@
+ #  CXXFLAGS := -mahflag $(CXXFLAGS) # Prepend to the list
+ #  CXXFLAGS := $(filter-out badflag,$(CXXFLAGS)) # Filter out a value
+ # The same goes for CFLAGS.
+-COMMON_CFLAGS := -Wall -Werror -fstack-protector-strong -fno-strict-aliasing \
++COMMON_CFLAGS := -Wall -Werror -fno-strict-aliasing \
+   -ggdb3 -Wa,--noexecstack -O1 -fvisibility=internal -Wformat=2
+ CXXFLAGS += $(COMMON_CFLAGS)
+ CFLAGS += $(COMMON_CFLAGS)

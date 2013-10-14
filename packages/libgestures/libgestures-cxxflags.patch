@@ -1,0 +1,23 @@
+diff -aur gestures/Makefile fixes/Makefile
+--- gestures/Makefile	2013-04-06 14:19:17.630155879 -0800
++++ fixes/Makefile	2013-04-06 14:32:29.550156257 -0800
+@@ -115,19 +115,9 @@
+ 
+ LID_TOUCHPAD_HELPER=lid_touchpad_helper
+ 
+-# Local compilation needs these flags, esp for code coverage testing
+-ifeq (g++,$(CXX))
+-CXXFLAGS+=\
+-	-O1 \
+-	-DVCSID="\"1234 TESTVERSION\"" \
+-	--coverage \
+-	-ftest-coverage \
+-	-fprofile-arcs
+-else
+ CXXFLAGS+=\
+ 	-DXLOGGING
+ PC_DEPS += pixman-1
+-endif
+ 
+ PKG_CONFIG ?= pkg-config
+ BASE_VER ?= 125070

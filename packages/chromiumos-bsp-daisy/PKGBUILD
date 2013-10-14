@@ -1,0 +1,56 @@
+# Maintainer: Thomas Sowell <tom@fancydriving.org>
+
+buildarch=1
+
+pkgname=chromiumos-bsp-daisy
+pkgdesc="Chromium OS board support configuration files"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="http://git.chromium.org/gitweb/?p=chromiumos/overlays/board-overlays.git;a=summary"
+license=('custom:chromiumos')
+_gitname='board-overlays'
+depends=('laptop-mode-tools' 'systemd' 'chromiumos-power-manager')
+makedepends=('git')
+provides=('chromiumos-bsp')
+
+source=(thermal.service
+        LICENSE
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/overlays/board-overlays.git#branch=release-R25-3428.B")
+
+md5sums=('8403bd3917c33264c3316dde7599856b'
+         '87dd8458232da630f5617873d42d8350'
+         'SKIP')
+
+package() {
+  cd "$srcdir/$_gitname/overlay-daisy/chromeos-base/chromeos-bsp-daisy/files"
+
+  local _pmcfgs=(
+    battery_poll_short_interval_ms
+    low_battery_shutdown_percent
+    low_battery_shutdown_time_s
+    wakeup_input_device_names
+  )
+  for I in "${_pmcfgs[@]}"; do
+    install -m 644 -D ${I} ${pkgdir}/usr/share/power_management/board_specific/${I}
+  done
+
+  local _lmcfgs=(
+    usb-autosuspend.conf
+    cpufreq.conf
+  )
+  for I in "${_lmcfgs[@]}"; do
+    install -m 644 -D ${I} ${pkgdir}/etc/laptop-mode/conf.d/board-specific/${I}
+  done
+
+  install -d ${pkgdir}/lib/udev/rules.d
+  install -m 644 50-rtc-max77686.rules ${pkgdir}/lib/udev/rules.d
+
+  install -m 755 -D thermal.sh ${pkgdir}/usr/sbin/thermal.sh
+
+
+  install -m 644 -D ${srcdir}/thermal.service ${pkgdir}/usr/lib/systemd/system/thermal.service
+
+  install -m 644 -D ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+

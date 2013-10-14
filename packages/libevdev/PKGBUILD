@@ -1,0 +1,38 @@
+# Maintainer: Thomas Sowell <tom@saxmachine.org>
+
+buildarch=1
+
+pkgname=libevdev
+pkgdesc="Chromium OS event device library"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="http://git.chromium.org/gitweb/?p=chromiumos/platform/libevdev.git;a=summary"
+license=('custom:chromiumos')
+_gitname='libevdev'
+makedepends=('git')
+
+source=(libevdev-cflags.patch
+        LICENSE
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/libevdev.git#branch=release-R25-3428.B")
+
+md5sums=('9723e993bd3e065f653dc139747cd75e'
+         '87dd8458232da630f5617873d42d8350'
+         'SKIP')
+
+prepare() {
+  cd "$srcdir/$_gitname"
+  git apply ${srcdir}/libevdev-cflags.patch
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+
+  make
+}
+
+package() {
+  make -C "$srcdir/$_gitname" DESTDIR="${pkgdir}" install
+
+  install -m 644 -D ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

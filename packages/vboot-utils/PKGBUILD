@@ -1,0 +1,30 @@
+# Maintainer: Thomas Sowell <tom@saxmachine.org>
+
+buildarch=1
+
+pkgname=vboot-utils
+pkgdesc="Chromium OS verified boot utilities"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="http://git.chromium.org/gitweb/?p=chromiumos/platform/vboot_reference.git;a=summary"
+license=('custom:chromiumos')
+_gitname='vboot_reference'
+depends=('trousers')
+makedepends=('git')
+
+source=("$_gitname::git+http://git.chromium.org/git/chromiumos/platform/vboot_reference.git#branch=release-R25-3428.B")
+
+md5sums=('SKIP')
+
+build() {
+  cd "$srcdir/$_gitname"
+
+  ARCH=arm CFLAGS="-Wno-error=format" make
+}
+
+package() {
+  make -C "$srcdir/$_gitname" DESTDIR="${pkgdir}/usr/bin" install
+
+  install -m 644 -D ${srcdir}/${_gitname}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

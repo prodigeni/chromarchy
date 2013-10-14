@@ -1,0 +1,42 @@
+# Maintainer: Thomas Sowell <tom@saxmachine.org>
+
+buildarch=1
+
+pkgname=chromium-proto
+pkgdesc="Chromium OS device policies"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="http://git.chromium.org/gitweb/?p=chromium/src/chrome/browser/policy/proto.git;a=summary"
+license=('custom:chromium')
+_gitwebroot="http://git.chromium.org/gitweb/?p=chromium.git;a=blob_plain;f=chrome/browser/policy/proto"
+_gitcommit=1f03fb3cdb457cb2e52345a8f908aad1d1571f2e
+_gitname='proto'
+makedepends=('git')
+
+source=(LICENSE)
+md5sums=('d2d164565cc10f298390174d9cb6d18d')
+
+prepare() {
+  mkdir -p "$startdir/$_gitname"
+  cd "$startdir/$_gitname"
+  for FILE in chrome_device_policy.proto      \
+              device_management_backend.proto \
+              device_management_local.proto   \
+              old_generic_format.proto; do
+    wget "${_gitwebroot}/${FILE};hb=${_gitcommit}" -O ${FILE}
+  done
+
+  cp -r "$startdir/$_gitname" "$srcdir"
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+
+  for I in *.proto; do
+    install -m 644 -D ${srcdir}/${_gitname}/${I} ${pkgdir}/usr/include/proto/${I}
+  done
+
+  install -m 644 -D ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+

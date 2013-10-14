@@ -1,0 +1,54 @@
+# Maintainer: Thomas Sowell <tom@saxmachine.org>
+
+buildarch=1
+
+pkgname=trousers
+pkgdesc="Open-source TCG Software Stack (TSS)"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/trousers.git;a=summary"
+license=('CPL')
+_gitname='trousers'
+makedepends=('git')
+
+source=(trousers-cast.patch
+        trousers-user.patch
+        tcsd.service
+        tcsd.sh
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/trousers.git#branch=release-R25-3428.B")
+
+md5sums=('38be7a89e2c08975b5cd0873d15fcb38'
+         'c2c3a0f26d9c77f61ba7e3344305e8fc'
+         '08c2f5a8c3a8ecfeb176c7b74267bb98'
+         'ef8737208e939128210349c27608d6a3'
+         'SKIP')
+
+prepare() {
+  cd "$srcdir/$_gitname"
+  git apply ${srcdir}/trousers-cast.patch
+  git apply ${srcdir}/trousers-user.patch
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+
+  sh bootstrap.sh
+  CFLAGS="-Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=cpp" ./configure --prefix=/usr
+  make
+}
+
+package() {
+  make -C "$srcdir/$_gitname" DESTDIR="${pkgdir}" install
+  chmod 0600 ${pkgdir}/etc/tcsd.conf
+
+  cd "$srcdir/$_gitname"
+  install -d ${pkgdir}/etc/trousers
+  install -m 644 dist/system.data.auth ${pkgdir}/etc/trousers
+  install -m 644 dist/system.data.noauth ${pkgdir}/etc/trousers
+
+  install -d ${pkgdir}/usr/lib/systemd/scripts
+  install -m 755 ${srcdir}/tcsd.sh ${pkgdir}/usr/lib/systemd/scripts
+  install -d ${pkgdir}/usr/lib/systemd/system
+  install -m 644 ${srcdir}/tcsd.service ${pkgdir}/usr/lib/systemd/system
+}

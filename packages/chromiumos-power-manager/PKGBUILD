@@ -1,0 +1,128 @@
+# Maintainer: Thomas Sowell <tom@saxmachine.org>
+
+buildarch=1
+
+pkgname=chromiumos-power-manager
+pkgdesc="Chromium OS power management daemon"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="http://git.chromium.org/gitweb/?p=chromiumos/platform/power_manager.git;a=summary"
+#license=('GPL2')
+_gitname='power_manager'
+depends=('dbus-glib' 'libchromeos' 'chromiumos-metrics' 'chromiumos-system-api'
+         'shflags' 'syslog-ng' 'vboot-utils')
+makedepends=('git')
+
+source=(power-manager-stack.patch
+        power-manager-dbus-headers.patch
+        power-manager-fcntl.patch
+        power-manager-librt.patch
+        power-manager-systemd.patch
+        power-manager-utmp.patch
+        power-manager-scripts.patch
+        power-manager-oobe.patch
+        powerd.service
+        powerm.service
+        useractd.c
+        useractd.service
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/power_manager.git#branch=release-R25-3428.B")
+
+md5sums=('be5c102b99bd1b144c85bbc615198445'
+         '1612118a9c6639ae5a25af39fe26f48c'
+         '1a03c0fc9ab5ed044c7521a4206f202c'
+         '141713e80b8cbecfd3e78ab453b652b3'
+         '2c00d83f83d8a11efaa01c4f4e96e7e1'
+         'cb52c59903105c6c167acd8d5e96e4e8'
+         '2385273f8e65b1128bd8f8d015a5e0bd'
+         '65a2c5d81e53883dddeea0d57fd247d3'
+         '18c834e2076b65c7095c576b86e8e12d'
+         '1209dbce2bae2b29ea67092f43ca6158'
+         '0796112cd6519fb94e84acc34be51250'
+         '5e4935c4b51374ab5522eb0c337b07b7'
+         'SKIP')
+
+prepare() {
+  cd "$srcdir/$_gitname"
+  git apply ${srcdir}/power-manager-stack.patch
+  git apply ${srcdir}/power-manager-dbus-headers.patch
+  git apply ${srcdir}/power-manager-fcntl.patch
+  git apply ${srcdir}/power-manager-librt.patch
+  git apply ${srcdir}/power-manager-systemd.patch
+  git apply ${srcdir}/power-manager-utmp.patch
+  git apply ${srcdir}/power-manager-scripts.patch
+  git apply ${srcdir}/power-manager-oobe.patch
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+
+  USE_NEW_POWER_BUTTON=y USE_ALS=y USE_LOCKVT=y CXXFLAGS="-Wno-error=deprecated-declarations" make
+
+  local _useractd_CFLAGS=$(pkg-config --cflags glib-2.0 dbus-glib-1)
+  local _useractd_LDFLAGS=$(pkg-config --libs glib-2.0 dbus-glib-1)
+
+  cd "$srcdir"
+  gcc $_useractd_CFLAGS $_useractd_LDFLAGS useractd.c -o useractd
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+
+  install -d ${pkgdir}/usr/bin
+  local _bins=(
+    out/powerd/powerd
+    out/powerm/powerm
+    out/tools/backlight_dbus_tool
+    out/tools/backlight-tool
+    out/tools/power_state_tool
+    out/tools/power-supply-info
+    out/tools/powerd_dbus_suspend
+    out/tools/suspend_delay_sample
+    out/tools/memory_suspend_test
+  )
+  local _scripts=(
+    scripts/debug_sleep_quickly
+    scripts/powerd_suspend
+    scripts/send_metrics_on_resume
+    scripts/set_short_powerd_timeouts
+    scripts/suspend_stress_test
+  )
+  for I in "${_bins[@]}" "${_scripts[@]}"; do
+    install -m 755 $I ${pkgdir}/usr/bin
+  done
+
+  install -d ${pkgdir}/usr/share/power_manager
+  install -m 644 config/* ${pkgdir}/usr/share/power_manager
+
+  install -d ${pkgdir}/etc/dbus-1/system.d
+  install -m 644 dbus/org.chromium.PowerManager.conf \
+    ${pkgdir}/etc/dbus-1/system.d
+  install -m 644 dbus/RootPowerManager.conf \
+    ${pkgdir}/etc/dbus-1/system.d
+
+  install -d ${pkgdir}/lib/udev
+  install -m 755 udev/usb-hid-wake.sh ${pkgdir}/lib/udev
+
+  install -d ${pkgdir}/lib/udev/rules.d
+  install -m 644 udev/99-usb-hid-wake.rules ${pkgdir}/lib/udev/rules.d
+
+  install -d ${pkgdir}/usr/lib/systemd/system
+  install -m 644 ${srcdir}/powerd.service ${pkgdir}/usr/lib/systemd/system
+  install -m 644 ${srcdir}/powerm.service ${pkgdir}/usr/lib/systemd/system
+
+  install -d ${pkgdir}/var/log/power_manager
+  install -d ${pkgdir}/var/lib/power_manager
+
+  install -d ${pkgdir}/usr/share/licenses/${pkgname}
+  install -m 644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+
+
+  cd "$srcdir"
+
+  install -d ${pkgdir}/usr/bin
+  install -m 755 useractd ${pkgdir}/usr/bin
+
+  install -m 644 -D useractd.service ${pkgdir}/usr/lib/systemd/system
+}
+

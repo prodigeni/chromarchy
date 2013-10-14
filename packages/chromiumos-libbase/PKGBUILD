@@ -1,0 +1,76 @@
+# Maintainer: Thomas Sowell <tom@saxmachine.org>
+
+buildarch=1
+
+pkgname=chromiumos-libbase
+pkgdesc="Common shared library code for Chromium OS"
+pkgver=R25.3428
+pkgrel=1
+arch=('any')
+url="https://src.chromium.org/chrome/trunk/src/base"
+license=('custom:chromium')
+_svnname='base'
+_basever=125070
+depends=('glib' 'libevent' 'gtest')
+makedepends=('git' 'subversion' 'chromiumos-overlay')
+
+source=(base-pkgconfig.patch
+        LICENSE
+        "$_svnname::svn+https://src.chromium.org/chrome/trunk/src/base#revision=125070")
+
+md5sums=('c4cfdbe52d944052dd26337a24f7a222'
+         'd2d164565cc10f298390174d9cb6d18d'
+         'SKIP')
+
+prepare() {
+  mkdir -p "$srcdir/build"
+  cd "$srcdir/build"
+  cp "/usr/share/chromiumos-overlay/chromeos-base/libchrome/files/build_config.h-125070" build_config.h
+
+  local _libchromepatchdir="/usr/share/chromiumos-overlay/chromeos-base/libchrome/files"
+
+  cd "$srcdir/$_svnname"
+  cp "$_libchromepatchdir/SConstruct-125070" SConstruct
+
+  patch -Np1 -i ${srcdir}/base-pkgconfig.patch
+  patch -Np3 -i ${_libchromepatchdir}/gtest_include_path_fixup.patch
+  patch -Np1 -i ${_libchromepatchdir}/base-125070-headers.patch
+  patch -Np1 -i ${_libchromepatchdir}/base-125070-no-X.patch
+  patch -Np1 -i ${_libchromepatchdir}/base-125070-gcc-4_7.patch
+}
+
+build() {
+  cd "$srcdir/$_svnname"
+
+  BASE_VER=$_basever scons
+}
+
+package() {
+  cd "$srcdir/$_svnname"
+
+  install -m 644 -D libchrome-${_basever}.pc ${pkgdir}/usr/lib/pkgconfig/libchrome-${_basever}.pc
+  for I in libbase*-${_basever}.so; do
+    install -m 755 -D ${I} ${pkgdir}/usr/lib/${I}
+  done
+  local _header_dirs=(
+    third_party/icu
+    third_party/nspr
+    third_party/valgrind
+    third_party/dynamic_annotations
+    .
+    debug
+    json
+    memory
+    synchronization
+    threading
+  )
+  for d in "${_header_dirs[@]}"; do
+    install -m 755 -d ${pkgdir}/usr/include/base-${_basever}/base/${d}
+    install -m 644 ${d}/*.h ${pkgdir}/usr/include/base-${_basever}/base/${d}
+  done
+
+  install -m 644 -D ${srcdir}/build/build_config.h ${pkgdir}/usr/include/base-${_basever}/build/build_config.h
+
+  install -m 644 -D ${srcdir}/LICENSE ${pkgdir}/usr/share/license/${pkgname}/LICENSE
+}
+

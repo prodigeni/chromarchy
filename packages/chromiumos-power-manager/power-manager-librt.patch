@@ -1,0 +1,12 @@
+diff -Naur power_manager/powerd/module.mk power_manager-rt/powerd/module.mk
+--- power_manager/powerd/module.mk	2013-04-07 15:09:58.665002426 -0800
++++ power_manager-rt/powerd/module.mk	2013-04-09 20:22:01.085004649 -0800
+@@ -76,7 +76,7 @@
+ 	CXX_STATIC_LIBRARY(common/libutil.pie.a) \
+ 	CXX_STATIC_LIBRARY(common/libutil_dbus.pie.a)
+ CXX_BINARY(powerd/powerd): CPPFLAGS += $(POWERD_FLAGS)
+-CXX_BINARY(powerd/powerd): LDLIBS += $(POWERD_LIBS)
++CXX_BINARY(powerd/powerd): LDLIBS += $(POWERD_LIBS) -lrt
+ clean: CXX_BINARY(powerd/powerd)
+ all: CXX_BINARY(powerd/powerd)
+ 

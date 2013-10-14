@@ -1,0 +1,67 @@
+diff -Naur1 power_manager/scripts/debug_sleep_quickly power_manager-scripts/scripts/debug_sleep_quickly
+--- power_manager/scripts/debug_sleep_quickly	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-scripts/scripts/debug_sleep_quickly	2013-04-14 09:36:24.460000650 -0800
+@@ -28,3 +28,3 @@
+ 
+-initctl restart powerd
++systemctl restart powerd
+ 
+@@ -56,2 +56,2 @@
+ # Belt-and-suspenders; powerd gets file notify messages on those files
+-initctl restart powerd
++systemctl restart powerd
+diff -Naur1 power_manager/scripts/powerd_suspend power_manager-scripts/scripts/powerd_suspend
+--- power_manager/scripts/powerd_suspend	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-scripts/scripts/powerd_suspend	2013-04-14 10:47:14.622423930 -0800
+@@ -6,3 +6,3 @@
+ 
+-. /usr/share/misc/shflags
++. /usr/share/lib/shflags/shflags.sh
+ 
+@@ -131,3 +131,3 @@
+ power-supply-info 2> /dev/null \
+-  | /bin/grep -Eq '^[[:space:]]+online:[[:space:]]+no$'
++  | /usr/bin/grep -Eq '^[[:space:]]+online:[[:space:]]+no$'
+ if [ $? -eq 0 ]; then
+diff -Naur1 power_manager/scripts/send_metrics_on_resume power_manager-scripts/scripts/send_metrics_on_resume
+--- power_manager/scripts/send_metrics_on_resume	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-scripts/scripts/send_metrics_on_resume	2013-04-14 10:46:42.567203787 -0800
+@@ -12,3 +12,3 @@
+ 
+-# Send a message to /var/log/messages.
++# Send a message to /var/log/messages.log.
+ # Arguments:
+@@ -33,3 +33,3 @@
+ 
+-# Creates a file based on /var/log/messages containing messages from the most
++# Creates a file based on /var/log/messages.log containing messages from the most
+ # recent resume onwards.  This speeds up greps and also makes it possible
+@@ -47,5 +47,5 @@
+     # count can change if the log gets rotated mid run
+-    local count=$(grep -c "${suspend_start}" /var/log/messages)
++    local count=$(grep -c "${suspend_start}" /var/log/messages.log)
+ 
+-    csplit -s -f "${tempdir}/recent_messages" /var/log/messages \
++    csplit -s -f "${tempdir}/recent_messages" /var/log/messages.log \
+       "%${suspend_start}%" {$((count-1))}
+@@ -126,3 +126,3 @@
+   [ -n "$1" -a -n "$2" ] || return
+-  /bin/grep -E "$1" "$2" \
++  /usr/bin/grep -E "$1" "$2" \
+     | /usr/bin/tail -n1 \
+diff -Naur1 power_manager/scripts/set_short_powerd_timeouts power_manager-scripts/scripts/set_short_powerd_timeouts
+--- power_manager/scripts/set_short_powerd_timeouts	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-scripts/scripts/set_short_powerd_timeouts	2013-04-14 11:16:46.407283274 -0800
+@@ -34,3 +34,2 @@
+ 
+-( (status powerd | fgrep -q "start/running" ) && restart powerd ) || \
+-    start powerd
++systemctl restart powerd
+diff -Naur1 power_manager/scripts/suspend_stress_test power_manager-scripts/scripts/suspend_stress_test
+--- power_manager/scripts/suspend_stress_test	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-scripts/scripts/suspend_stress_test	2013-04-14 10:54:07.867298450 -0800
+@@ -6,3 +6,3 @@
+ 
+-. /usr/share/misc/shflags
++. /usr/share/lib/shflags/shflags.sh
+ 

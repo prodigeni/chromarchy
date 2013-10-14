@@ -1,0 +1,12 @@
+diff -Naur libevdev/common.mk libevdev-fix/common.mk
+--- libevdev/common.mk	2013-04-07 08:33:34.480000986 -0800
++++ libevdev-fix/common.mk	2013-04-07 08:34:42.929998785 -0800
+@@ -260,7 +260,7 @@
+ #  CXXFLAGS := -mahflag $(CXXFLAGS) # Prepend to the list
+ #  CXXFLAGS := $(filter-out badflag,$(CXXFLAGS)) # Filter out a value
+ # The same goes for CFLAGS.
+-COMMON_CFLAGS := -Wall -Werror -fstack-protector-strong -fno-strict-aliasing \
++COMMON_CFLAGS := -Wall -Werror -fno-strict-aliasing \
+   -ggdb3 -Wa,--noexecstack -O1 -fvisibility=internal -Wformat=2
+ CXXFLAGS += $(COMMON_CFLAGS)
+ CFLAGS += $(COMMON_CFLAGS)

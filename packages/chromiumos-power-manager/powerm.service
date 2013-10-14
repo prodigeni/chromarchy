@@ -1,0 +1,11 @@
+#systemd port of chromiumos/platform/init/powerm.conf
+[Unit]
+Description=ChromeOS Privileged Power Manager Daemon
+Requires=dbus.service
+After=dbus.service
+
+[Service]
+Type=dbus
+BusName=org.chromium.RootPowerManager
+ExecStart=/bin/sh -c '/usr/bin/powerm --prefs_dir=/var/lib/power_manager  --log_dir=/var/log/power_manager --run_dir=/var/run/power_manager/power > /var/log/powerm.out 2>&1'
+

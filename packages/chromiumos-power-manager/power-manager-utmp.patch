@@ -1,0 +1,51 @@
+diff -Naur power_manager/common/util_dbus.cc power_manager-utmp/common/util_dbus.cc
+--- power_manager/common/util_dbus.cc	2013-04-07 15:09:58.630002426 -0800
++++ power_manager-utmp/common/util_dbus.cc	2013-04-11 01:08:38.485001567 -0800
+@@ -8,6 +8,8 @@
+ #include <google/protobuf/message_lite.h>
+ #include <unistd.h>
+ 
++#include <utmp.h>
++
+ #include <climits>
+ 
+ #include "base/basictypes.h"
+@@ -28,35 +30,9 @@
+ }
+ 
+ bool GetSessionState(std::string* state, std::string* user) {
+-  chromeos::dbus::Proxy proxy(chromeos::dbus::GetSystemBusConnection(),
+-                              login_manager::kSessionManagerServiceName,
+-                              login_manager::kSessionManagerServicePath,
+-                              login_manager::kSessionManagerInterface);
+-
+-  GError* error = NULL;
+-  gchar* state_arg = NULL;
+-  gchar* user_arg = NULL;
+-  if (dbus_g_proxy_call(proxy.gproxy(),
+-                        login_manager::kSessionManagerRetrieveSessionState,
+-                        &error,
+-                        G_TYPE_INVALID,
+-                        G_TYPE_STRING,
+-                        &state_arg,
+-                        G_TYPE_STRING,
+-                        &user_arg,
+-                        G_TYPE_INVALID)) {
+-    if (state)
+-      *state = state_arg;
+-    if (user)
+-      *user = user_arg;
+-    g_free(state_arg);
+-    g_free(user_arg);
+-    return true;
+-  }
+-  LOG(ERROR) << "Unable to retrieve session state from session manager: "
+-             << error->message;
+-  g_error_free(error);
+-  return false;
++  setutent();
++  *state = (getutent() == NULL)?"stopped":"started";
++  return true;
+ }
+ 
+ bool ParseProtocolBufferFromDBusMessage(

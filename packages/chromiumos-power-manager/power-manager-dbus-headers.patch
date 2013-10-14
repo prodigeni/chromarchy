@@ -1,0 +1,159 @@
+diff -Naur power_manager/common/dbus_sender.cc power_manager-fixed/common/dbus_sender.cc
+--- power_manager/common/dbus_sender.cc	2013-04-07 15:09:58.625002426 -0800
++++ power_manager-fixed/common/dbus_sender.cc	2013-04-09 20:11:52.640004196 -0800
+@@ -4,6 +4,7 @@
+ 
+ #include "power_manager/common/dbus_sender.h"
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <google/protobuf/message_lite.h>
+ #include <unistd.h>
+diff -Naur power_manager/common/util_dbus.cc power_manager-fixed/common/util_dbus.cc
+--- power_manager/common/util_dbus.cc	2013-04-07 15:09:58.630002426 -0800
++++ power_manager-fixed/common/util_dbus.cc	2013-04-09 20:12:39.820004985 -0800
+@@ -4,6 +4,7 @@
+ 
+ #include "power_manager/common/util_dbus.h"
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <google/protobuf/message_lite.h>
+ #include <unistd.h>
+diff -Naur power_manager/common/util_dbus_handler.cc power_manager-fixed/common/util_dbus_handler.cc
+--- power_manager/common/util_dbus_handler.cc	2013-04-07 15:09:58.635002426 -0800
++++ power_manager-fixed/common/util_dbus_handler.cc	2013-04-09 20:12:37.055004478 -0800
+@@ -4,6 +4,7 @@
+ 
+ #include "power_manager/common/util_dbus_handler.h"
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include "base/logging.h"
+diff -Naur power_manager/powerd/backlight_client.cc power_manager-fixed/powerd/backlight_client.cc
+--- power_manager/powerd/backlight_client.cc	2013-04-07 15:09:58.645002426 -0800
++++ power_manager-fixed/powerd/backlight_client.cc	2013-04-09 20:07:27.010004232 -0800
+@@ -4,7 +4,7 @@
+ 
+ #include "power_manager/powerd/backlight_client.h"
+ 
+-#include <dbus/dbus.h>
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include <string>
+diff -Naur power_manager/powerd/backlight_client.h power_manager-fixed/powerd/backlight_client.h
+--- power_manager/powerd/backlight_client.h	2013-04-07 15:09:58.645002426 -0800
++++ power_manager-fixed/powerd/backlight_client.h	2013-04-09 20:07:27.030004230 -0800
+@@ -5,6 +5,7 @@
+ #ifndef POWER_MANAGER_POWERD_BACKLIGHT_CLIENT_H_
+ #define POWER_MANAGER_POWERD_BACKLIGHT_CLIENT_H_
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include "base/basictypes.h"
+diff -Naur power_manager/powerd/external_backlight_controller.cc power_manager-fixed/powerd/external_backlight_controller.cc
+--- power_manager/powerd/external_backlight_controller.cc	2013-04-07 15:09:58.650002426 -0800
++++ power_manager-fixed/powerd/external_backlight_controller.cc	2013-04-09 20:12:42.045003286 -0800
+@@ -4,6 +4,7 @@
+ 
+ #include "power_manager/powerd/external_backlight_controller.h"
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include <algorithm>
+diff -Naur power_manager/powerd/powerd.h power_manager-fixed/powerd/powerd.h
+--- power_manager/powerd/powerd.h	2013-04-07 15:09:58.665002426 -0800
++++ power_manager-fixed/powerd/powerd.h	2013-04-09 20:07:40.755003877 -0800
+@@ -6,6 +6,7 @@
+ #define POWER_MANAGER_POWERD_POWERD_H_
+ #pragma once
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <glib.h>
+ #include <gtest/gtest_prod.h>  // for FRIEND_TEST
+diff -Naur power_manager/powerd/state_control.cc power_manager-fixed/powerd/state_control.cc
+--- power_manager/powerd/state_control.cc	2013-04-07 15:09:58.670002426 -0800
++++ power_manager-fixed/powerd/state_control.cc	2013-04-09 20:07:27.050004232 -0800
+@@ -2,7 +2,7 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+-#include <dbus/dbus.h>
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include <algorithm>
+diff -Naur power_manager/powerd/suspender.h power_manager-fixed/powerd/suspender.h
+--- power_manager/powerd/suspender.h	2013-04-07 15:09:58.670002426 -0800
++++ power_manager-fixed/powerd/suspender.h	2013-04-09 20:07:27.075004231 -0800
+@@ -5,7 +5,7 @@
+ #ifndef POWER_MANAGER_POWERD_SUSPENDER_H_
+ #define POWER_MANAGER_POWERD_SUSPENDER_H_
+ 
+-#include <dbus/dbus.h>
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include <map>
+diff -Naur power_manager/powerm/external_backlight.cc power_manager-fixed/powerm/external_backlight.cc
+--- power_manager/powerm/external_backlight.cc	2013-04-07 15:09:58.670002426 -0800
++++ power_manager-fixed/powerm/external_backlight.cc	2013-04-09 20:07:27.105004231 -0800
+@@ -4,7 +4,7 @@
+ 
+ #include "power_manager/powerm/external_backlight.h"
+ 
+-#include <dbus/dbus.h>
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <dirent.h>
+ #include <fcntl.h>
+diff -Naur power_manager/powerm/powerman.h power_manager-fixed/powerm/powerman.h
+--- power_manager/powerm/powerman.h	2013-04-07 15:09:58.670002426 -0800
++++ power_manager-fixed/powerm/powerman.h	2013-04-09 20:12:44.550003086 -0800
+@@ -5,6 +5,7 @@
+ #ifndef POWER_MANAGER_POWERM_POWERMAN_H_
+ #define POWER_MANAGER_POWERM_POWERMAN_H_
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <sys/types.h>
+ 
+diff -Naur power_manager/tools/backlight_dbus_tool.cc power_manager-fixed/tools/backlight_dbus_tool.cc
+--- power_manager/tools/backlight_dbus_tool.cc	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-fixed/tools/backlight_dbus_tool.cc	2013-04-09 20:12:49.015004436 -0800
+@@ -2,6 +2,7 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <gflags/gflags.h>
+ #include <inttypes.h>
+diff -Naur power_manager/tools/powerd_dbus_suspend.cc power_manager-fixed/tools/powerd_dbus_suspend.cc
+--- power_manager/tools/powerd_dbus_suspend.cc	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-fixed/tools/powerd_dbus_suspend.cc	2013-04-09 20:07:27.125004231 -0800
+@@ -10,7 +10,7 @@
+ 
+ #include <cstdio>
+ #include <cstdlib>
+-#include <dbus/dbus.h>
++#include <dbus-1.0/dbus/dbus.h>
+ #include <gflags/gflags.h>
+ 
+ #include "base/logging.h"
+diff -Naur power_manager/tools/suspend_delay_sample.cc power_manager-fixed/tools/suspend_delay_sample.cc
+--- power_manager/tools/suspend_delay_sample.cc	2013-04-07 15:09:58.675002426 -0800
++++ power_manager-fixed/tools/suspend_delay_sample.cc	2013-04-09 20:13:04.040004391 -0800
+@@ -2,6 +2,7 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#include <dbus-1.0/dbus/dbus.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ #include <gflags/gflags.h>
+ #include <time.h>

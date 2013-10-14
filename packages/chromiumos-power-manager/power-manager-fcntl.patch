@@ -1,0 +1,11 @@
+diff -Naur power_manager/powerd/async_file_reader.cc power_manager-fixed/powerd/async_file_reader.cc
+--- power_manager/powerd/async_file_reader.cc	2013-04-07 15:09:58.645002426 -0800
++++ power_manager-fixed/powerd/async_file_reader.cc	2013-04-09 19:55:49.315002558 -0800
+@@ -8,6 +8,7 @@
+ #include <glib.h>
+ #include <stdio.h>
+ #include <sys/stat.h>
++#include <fcntl.h>
+ 
+ #include "base/logging.h"
+ 
