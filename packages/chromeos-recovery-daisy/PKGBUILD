@@ -1,0 +1,26 @@
+# Maintainer: Thomas Sowell <tom@fancydriving.org>
+
+buildarch=1
+
+pkgname=chromeos-recovery-daisy
+pkgdesc="Chromium OS audio server"
+pkgver=R29.4319
+pkgrel=1
+arch=('any')
+url="http://www.google.com/"
+license=('custom:chromeosterms')
+depends=()
+makedepends=('unzip')
+provides=('chromeos-recovery')
+
+_recoveryimage="chromeos_4319.96.0_daisy_recovery_stable-channel_mp-v3.bin"
+
+source=("https://dl.google.com/dl/edgedl/chromeos/recovery/${_recoveryimage}.zip")
+
+md5sums=('5a8ffb371782a14708131a12abc36c3b')
+
+package() {
+  cd "$srcdir"
+  install -d ${pkgdir}/usr/share/chromeos-recovery
+  install -m 644 ${srcdir}/${_recoveryimage} ${pkgdir}/usr/share/chromeos-recovery/chromeos-recovery.bin
+}
