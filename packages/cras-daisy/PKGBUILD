@@ -12,7 +12,7 @@ license=('custom:chromiumos')
 _gitname='adhd'
 depends=('iniparser' 'ladspa' 'sbc' 'speex' 'alsa-utils')
 makedepends=('git' 'chromiumos-overlay')
-privdes=('cras')
+provides=('cras')
 
 source=(cras.service
         cras.socket
