@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=trousers
 pkgdesc="Open-source TCG Software Stack (TSS)"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/trousers.git;a=summary"
@@ -12,29 +12,29 @@ license=('CPL')
 _gitname='trousers'
 makedepends=('git')
 
-source=(trousers-cast.patch
-        trousers-user.patch
+source=(trousers-user.patch
+        trousers-no-error.patch
         tcsd.service
         tcsd.sh
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/trousers.git#branch=release-R25-3428.B")
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/trousers.git#branch=release-R30-4537.B")
 
-md5sums=('38be7a89e2c08975b5cd0873d15fcb38'
-         'c2c3a0f26d9c77f61ba7e3344305e8fc'
+md5sums=('c2c3a0f26d9c77f61ba7e3344305e8fc'
+         'a08a286960d36569c46888a51ed92b95'
          '08c2f5a8c3a8ecfeb176c7b74267bb98'
          'ef8737208e939128210349c27608d6a3'
          'SKIP')
 
 prepare() {
   cd "$srcdir/$_gitname"
-  git apply ${srcdir}/trousers-cast.patch
   git apply ${srcdir}/trousers-user.patch
+  git apply ${srcdir}/trousers-no-error.patch
 }
 
 build() {
   cd "$srcdir/$_gitname"
 
   sh bootstrap.sh
-  CFLAGS="-Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=cpp" ./configure --prefix=/usr
+  ./configure --prefix=/usr
   make
 }
 
