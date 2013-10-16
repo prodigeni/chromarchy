@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=vboot-utils
 pkgdesc="Chromium OS verified boot utilities"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/vboot_reference.git;a=summary"
@@ -13,7 +13,7 @@ _gitname='vboot_reference'
 depends=('trousers')
 makedepends=('git')
 
-source=("$_gitname::git+http://git.chromium.org/git/chromiumos/platform/vboot_reference.git#branch=release-R25-3428.B")
+source=("$_gitname::git+http://git.chromium.org/git/chromiumos/platform/vboot_reference.git#branch=release-R30-4537.B")
 
 md5sums=('SKIP')
 
