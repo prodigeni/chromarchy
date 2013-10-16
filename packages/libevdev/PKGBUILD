@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=libevdev
 pkgdesc="Chromium OS event device library"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/libevdev.git;a=summary"
@@ -14,9 +14,9 @@ makedepends=('git')
 
 source=(libevdev-cflags.patch
         LICENSE
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/libevdev.git#branch=release-R25-3428.B")
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/libevdev.git#branch=release-R30-4537.B")
 
-md5sums=('9723e993bd3e065f653dc139747cd75e'
+md5sums=('47d00ae2d04ce2fe5733ad38482adfc6'
          '87dd8458232da630f5617873d42d8350'
          'SKIP')
 
