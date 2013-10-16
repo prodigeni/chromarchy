@@ -10,7 +10,6 @@ arch=('any')
 url="http://www.google.com/"
 license=('custom:chromeosterms')
 depends=()
-makedepends=('unzip')
 provides=('chromeos-recovery')
 
 _recoveryimage="chromeos_4537.108.0_daisy-spring_recovery_stable-channel_mp-v2.bin"
