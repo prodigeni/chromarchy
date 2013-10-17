@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=cras-daisy
 pkgdesc="Chromium OS audio server"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/adhd.git;a=summary"
@@ -20,7 +20,7 @@ source=(cras.service
         crasctl
         org.chromium.cras.conf
         LICENSE
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/adhd.git#branch=release-R25-3428.B")
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/adhd.git#branch=release-R30-4537.B")
 
 md5sums=('3f0d0ba389795cb4bafea8d584652bd5'
          'f44dd92bf89da8d192d0d0a8b0fba442'
