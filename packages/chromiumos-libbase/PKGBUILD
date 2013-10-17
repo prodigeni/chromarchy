@@ -64,8 +64,12 @@ package() {
     third_party/dynamic_annotations
     .
     debug
+    files
     json
     memory
+    metrics
+    posix
+    strings
     synchronization
     threading
   )
