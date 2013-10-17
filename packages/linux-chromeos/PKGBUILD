@@ -17,8 +17,8 @@ install=linux-chromeos.install
 _chromeos_recovery=/usr/share/chromeos-recovery/chromeos-recovery.bin
 
 _root_a_start_bytes=146800640
-_kern_a_start_blocks=53248
-_kern_a_size_blocks=32768
+_kern_b_start_blocks=53248
+_kern_b_size_blocks=32768
 
 _packed_image=packed-oem-linux-chromeos
 
@@ -38,7 +38,7 @@ build() {
   sudo umount -d recovery_mnt 2>/dev/null || true
   sudo mount -o loop,ro,offset=$_root_a_start_bytes -t ext2 $_chromeos_recovery recovery_mnt
 
-  dd bs=512 skip=$_kern_a_start_blocks count=$_kern_a_size_blocks if=$_chromeos_recovery of=${srcdir}/$_packed_image
+  dd bs=512 skip=$_kern_b_start_blocks count=$_kern_b_size_blocks if=$_chromeos_recovery of=${srcdir}/$_packed_image
 }
 
 package() {
