@@ -8,8 +8,8 @@ pkgver=R30.4537
 pkgrel=1
 arch=('any')
 license=('custom:chromeosterms')
-depends=('vboot-utils')
-makedepends=('chromeos-recovery' 'chromeos-devkeys')
+depends=('vboot-utils' 'chromeos-devkeys')
+makedepends=('chromeos-recovery')
 options=('!strip')
 
 install=linux-chromeos.install
