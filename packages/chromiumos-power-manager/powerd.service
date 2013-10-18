@@ -1,8 +1,8 @@
 #systemd port of chromiumos/platform/init/powerd.conf
 [Unit]
 Description=ChromeOS Power Daemon
-Requires=dbus.service powerm.service useractd.service
-After=dbus.service powerm.service
+Requires=dbus.service useractd.service
+After=dbus.service
 Before=useractd.service
 
 [Service]

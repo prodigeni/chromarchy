@@ -1,19 +1,13 @@
-diff -Naur power_manager/common/util_dbus.cc power_manager-utmp/common/util_dbus.cc
---- power_manager/common/util_dbus.cc	2013-04-07 15:09:58.630002426 -0800
-+++ power_manager-utmp/common/util_dbus.cc	2013-04-11 01:08:38.485001567 -0800
-@@ -8,6 +8,8 @@
- #include <google/protobuf/message_lite.h>
- #include <unistd.h>
+diff -Naur1 power_manager/common/util_dbus.cc power_manager-utmp/common/util_dbus.cc
+--- power_manager/common/util_dbus.cc	2013-10-18 06:19:25.780000837 +0000
++++ power_manager-utmp/common/util_dbus.cc	2013-10-18 06:21:11.800000940 +0000
+@@ -10,2 +10,4 @@
  
 +#include <utmp.h>
 +
  #include <climits>
- 
- #include "base/basictypes.h"
-@@ -28,35 +30,9 @@
- }
- 
- bool GetSessionState(std::string* state, std::string* user) {
+@@ -24,24 +26,7 @@
+   DCHECK(state);
 -  chromeos::dbus::Proxy proxy(chromeos::dbus::GetSystemBusConnection(),
 -                              login_manager::kSessionManagerServiceName,
 -                              login_manager::kSessionManagerServicePath,
@@ -21,31 +15,24 @@ diff -Naur power_manager/common/util_dbus.cc power_manager-utmp/common/util_dbus
 -
 -  GError* error = NULL;
 -  gchar* state_arg = NULL;
--  gchar* user_arg = NULL;
 -  if (dbus_g_proxy_call(proxy.gproxy(),
 -                        login_manager::kSessionManagerRetrieveSessionState,
 -                        &error,
 -                        G_TYPE_INVALID,
 -                        G_TYPE_STRING,
 -                        &state_arg,
--                        G_TYPE_STRING,
--                        &user_arg,
 -                        G_TYPE_INVALID)) {
--    if (state)
--      *state = state_arg;
--    if (user)
--      *user = user_arg;
+-    *state = state_arg;
 -    g_free(state_arg);
--    g_free(user_arg);
 -    return true;
 -  }
 -  LOG(ERROR) << "Unable to retrieve session state from session manager: "
 -             << error->message;
 -  g_error_free(error);
 -  return false;
++
 +  setutent();
 +  *state = (getutent() == NULL)?"stopped":"started";
++
 +  return true;
  }
- 
- bool ParseProtocolBufferFromDBusMessage(
