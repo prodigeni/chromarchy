@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=chromiumos-bsp-daisy
 pkgdesc="Chromium OS board support configuration files"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/overlays/board-overlays.git;a=summary"
@@ -16,9 +16,9 @@ provides=('chromiumos-bsp')
 
 source=(thermal.service
         LICENSE
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/overlays/board-overlays.git#branch=release-R25-3428.B")
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/overlays/board-overlays.git#branch=release-R30-4537.B")
 
-md5sums=('8403bd3917c33264c3316dde7599856b'
+md5sums=('b49e979ddd8967a14b043781ab2bc09a'
          '87dd8458232da630f5617873d42d8350'
          'SKIP')
 
@@ -36,17 +36,18 @@ package() {
   done
 
   local _lmcfgs=(
-    usb-autosuspend.conf
     cpufreq.conf
+    runtime-pm.conf
   )
   for I in "${_lmcfgs[@]}"; do
     install -m 644 -D ${I} ${pkgdir}/etc/laptop-mode/conf.d/board-specific/${I}
   done
 
   install -d ${pkgdir}/lib/udev/rules.d
-  install -m 644 50-rtc-max77686.rules ${pkgdir}/lib/udev/rules.d
+  install -m 644 50-rtc.rules ${pkgdir}/lib/udev/rules.d
 
   install -m 755 -D thermal.sh ${pkgdir}/usr/sbin/thermal.sh
+  install -m 755 -D thermal.conf ${pkgdir}/etc/init/thermal.conf
 
 
   install -m 644 -D ${srcdir}/thermal.service ${pkgdir}/usr/lib/systemd/system/thermal.service

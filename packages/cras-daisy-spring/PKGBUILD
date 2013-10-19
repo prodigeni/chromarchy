@@ -2,7 +2,7 @@
 
 buildarch=1
 
-pkgname=cras-daisy
+pkgname=cras-daisy-spring
 pkgdesc="Chromium OS audio server"
 pkgver=R30.4537
 pkgrel=1
@@ -22,10 +22,10 @@ source=(cras.service
         LICENSE
         "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/adhd.git#branch=release-R30-4537.B")
 
-md5sums=('3f0d0ba389795cb4bafea8d584652bd5'
+md5sums=('af12775646abbea7210d5e0451b7bd4b'
          'f44dd92bf89da8d192d0d0a8b0fba442'
          '113dbdf7e1e931ba6288c255c7c287dc'
-         'e5487745f964f37d487c095bcff56d0f'
+         'bcb5dba2a6116b7fe939be97ac492782'
          '2fa50f51db3cefae7a2f38b11e6192bf'
          '87dd8458232da630f5617873d42d8350'
          'SKIP')
@@ -33,11 +33,11 @@ md5sums=('3f0d0ba389795cb4bafea8d584652bd5'
 build() {
   cd "$srcdir/$_gitname"
 
-  BOARD=daisy make
+  BOARD=daisy_spring make
 }
 
 package() {
-  BOARD=daisy make -C "$srcdir/$_gitname" DESTDIR="${pkgdir}/" install
+  BOARD=daisy_spring make -C "$srcdir/$_gitname" DESTDIR="${pkgdir}/" install
   rm -fr ${pkgdir}/etc/init
 
   install -d ${pkgdir}/usr/lib/systemd/system
@@ -53,6 +53,9 @@ package() {
 
   install -d ${pkgdir}/etc
   install -m 644 /usr/share/chromiumos-overlay/chromeos-base/audioconfig/files/asound.conf ${pkgdir}/etc/asound.conf
+
+  install -d ${pkgdir}/usr/share/alsa/ucm/DAISY-I2S
+  install -m 644 ${srcdir}/$_gitname/ucm-config/daisy_spring/DAISY-I2S/* ${pkgdir}/usr/share/alsa/ucm/DAISY-I2S
 
   install -m 644 -D ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }

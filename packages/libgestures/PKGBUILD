@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=libgestures
 pkgdesc="Chromium OS gestures library"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/gestures.git;a=summary"
@@ -13,15 +13,13 @@ _gitname='gestures'
 depends=('google-gflags' 'inputproto' 'xorg-xinput')
 makedepends=('git')
 
-source=(libgestures-cxxflags.patch
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/gestures.git#branch=release-R25-3428.B")
+source=("$_gitname::git+http://git.chromium.org/git/chromiumos/platform/gestures.git#branch=release-R30-4537.B")
 
-md5sums=('5f5d1ae5139d93ab35fc525aa5507e51'
-         'SKIP')
+md5sums=('SKIP')
 
 prepare() {
   cd "$srcdir/$_gitname"
-  git apply ${srcdir}/libgestures-cxxflags.patch
+  #git apply ${srcdir}/libgestures-cxxflags.patch
 }
 
 build() {

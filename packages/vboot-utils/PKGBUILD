@@ -4,23 +4,31 @@ buildarch=1
 
 pkgname=vboot-utils
 pkgdesc="Chromium OS verified boot utilities"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/vboot_reference.git;a=summary"
 license=('custom:chromiumos')
 _gitname='vboot_reference'
-depends=('trousers')
+depends=('trousers' 'libyaml')
 makedepends=('git')
 
-source=("$_gitname::git+http://git.chromium.org/git/chromiumos/platform/vboot_reference.git#branch=release-R25-3428.B")
+source=(vboot-utils-ld.patch
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/vboot_reference.git#branch=release-R30-4537.B")
 
-md5sums=('SKIP')
+md5sums=('5ada2164058f94492e665081f217150a'
+         'SKIP')
+
+prepare() {
+  cd "$srcdir/$_gitname"
+
+  git apply ${srcdir}/vboot-utils-ld.patch
+}
 
 build() {
   cd "$srcdir/$_gitname"
 
-  ARCH=arm CFLAGS="-Wno-error=format" make
+  ARCH=arm CFLAGS="-Wno-error=format -I/usr/include/yaml-cpp" make
 }
 
 package() {

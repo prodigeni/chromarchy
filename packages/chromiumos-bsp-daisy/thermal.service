@@ -8,4 +8,4 @@ RestartSec=10s
 Restart=always
 
 [Install]
-WAntedBy=sysinit.target
+WantedBy=sysinit.target

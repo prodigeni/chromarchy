@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=xf86-video-armsoc
 pkgdesc="Open-source X.org graphics driver for TI OMAP graphics"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/xf86-video-armsoc.git;a=summary"
@@ -13,9 +13,9 @@ _gitname='xf86-video-armsoc'
 makedepends=('git' 'pkgconfig' 'xorg-server-devel' 'resourceproto' 'scrnsaverproto')
 
 source=(xf86-video-armsoc-compat-X-1-14.patch
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/xf86-video-armsoc#branch=release-R25-3428.B")
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/xf86-video-armsoc#branch=release-R30-4537.B")
 
-md5sums=('2a435949d5ccd884406f51ee6127a8a6'
+md5sums=('29eee72f392a5b02a004dc525875fe37'
          'SKIP')
 
 build() {

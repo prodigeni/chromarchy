@@ -4,7 +4,7 @@ buildarch=1
 
 pkgname=chromiumos-librootdev
 pkgdesc="Chromium OS version of rootdev"
-pkgver=R25.3428
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/rootdev.git;a=summary"
@@ -12,7 +12,7 @@ license=('custom:chromiumos')
 _gitname='rootdev'
 makedepends=('git')
 
-source=("$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/rootdev.git#branch=release-R25-3428.B")
+source=("$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/rootdev.git#branch=release-R30-4537.B")
 
 md5sums=('SKIP')
 

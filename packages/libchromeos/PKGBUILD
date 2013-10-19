@@ -3,28 +3,31 @@
 buildarch=1
 
 pkgname=libchromeos
-pkgdesc=""
-pkgver=R25.3428
+pkgdesc="libchromeos"
+pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/libchromeos;a=summary"
 license=('custom:chromiumos')
 _gitname='libchromeos'
-_basever=125070
-depends=('dbus-c++' 'gmock' 'chromiumos-libbase')
+_basever=180609
+depends=('dbus-c++' 'gmock' 'chromiumos-libbase' 'dbus-glib')
 makedepends=('git' 'protobuf' 'chromium-proto')
 
 source=(libchromeos-pkgconfig.patch
+        libchromeos-camera-proto.patch
         LICENSE
-        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/libchromeos.git#branch=release-R25-3428.B")
+        "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/libchromeos.git#branch=release-R30-4537.B")
 
-md5sums=('d4af05320c51ca9549ade2918360dc8a'
+md5sums=('dd67a33805136823a2110129c28be9a4'
+         '17bfac5204793676c6e8572186b129be'
          '87dd8458232da630f5617873d42d8350'
          'SKIP')
 
 prepare() {
   cd "$srcdir/$_gitname"
   git apply ${srcdir}/libchromeos-pkgconfig.patch
+  git apply ${srcdir}/libchromeos-camera-proto.patch
 }
 
 build() {
