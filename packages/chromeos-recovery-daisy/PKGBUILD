@@ -3,7 +3,7 @@
 buildarch=1
 
 pkgname=chromeos-recovery-daisy
-pkgdesc="Chromium OS audio server"
+pkgdesc="Chrome OS recovery image"
 pkgver=R29.4319
 pkgrel=1
 arch=('any')
