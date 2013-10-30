@@ -8,7 +8,7 @@ pkgver=R30.4537
 pkgrel=1
 arch=('any')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/power_manager.git;a=summary"
-#license=('GPL2')
+license=('custom:chromiumos')
 _gitname='power_manager'
 depends=('dbus-glib' 'libchromeos' 'chromiumos-metrics' 'chromiumos-system-api'
          'shflags' 'syslog-ng' 'vboot-utils')
@@ -23,6 +23,7 @@ source=(power-manager-stack.patch
         powerd.service
         useractd.c
         useractd.service
+        LICENSE
         "$_gitname::git+http://git.chromium.org/git/chromiumos/platform/power_manager.git#branch=release-R30-4537.B")
 
 md5sums=('b2f15e9f1002389c1f6db7cef8bc08d2'
@@ -34,6 +35,7 @@ md5sums=('b2f15e9f1002389c1f6db7cef8bc08d2'
          '440654d8bfb2ef17437f03ee75672c25'
          '0796112cd6519fb94e84acc34be51250'
          '5e4935c4b51374ab5522eb0c337b07b7'
+         '87dd8458232da630f5617873d42d8350'
          'SKIP')
 
 prepare() {
@@ -125,5 +127,7 @@ package() {
   install -m 755 useractd ${pkgdir}/usr/bin
 
   install -m 644 -D useractd.service ${pkgdir}/usr/lib/systemd/system
+
+  install -m 644 -D ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
 
