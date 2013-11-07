@@ -1,8 +1,0 @@
-diff -Naur1 trousers/configure.in trousers-no-error/configure.in
---- trousers/configure.in	2013-10-16 04:20:44.735002294 +0000
-+++ trousers-no-error/configure.in	2013-10-16 04:23:41.330002378 +0000
-@@ -340,3 +340,3 @@
- 
--CFLAGS="$CFLAGS -I../include -W -Wall -Werror -Wno-unused-parameter -Wsign-compare \
-+CFLAGS="$CFLAGS -I../include -W -Wall -Wno-unused-parameter -Wsign-compare \
- 	-DTCSD_DEFAULT_PORT=${TCSD_DEFAULT_PORT} -DTSS_VER_MAJOR=${TSS_VER_MAJOR} \

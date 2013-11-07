@@ -1,9 +1,0 @@
-[Unit]
-Description=TrouSerS daemon
-
-[Service]
-Type=forking
-ExecStart=/usr/lib/systemd/scripts/tcsd.sh
-
-[Install]
-WantedBy=multi-user.target
