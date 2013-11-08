@@ -11,7 +11,7 @@ groups=('chromarchy')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/gestures.git;a=summary"
 license=('custom:chromiumos')
 _gitname='gestures'
-depends=('google-gflags' 'inputproto' 'xorg-xinput')
+depends=('google-gflags' 'inputproto' 'xorg-xinput' 'chromiumos-libbase')
 makedepends=('git')
 
 source=("$_gitname::git+http://git.chromium.org/git/chromiumos/platform/gestures.git#branch=release-R30-4537.B")
