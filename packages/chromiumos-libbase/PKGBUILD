@@ -48,7 +48,7 @@ prepare() {
 build() {
   cd "$srcdir/$_svnname"
 
-  BASE_VER=$_basever scons
+  BASE_VER=$_basever CCFLAGS="-Wno-error=unused-local-typedefs" scons
 }
 
 package() {
