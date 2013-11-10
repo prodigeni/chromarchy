@@ -26,6 +26,7 @@ prepare() {
   cd "$srcdir/$_gitname"
 
   git apply ${srcdir}/vboot-utils-ld.patch
+  git apply ${srcdir}/vboot-utils-shared-cgpt.patch
 }
 
 build() {
