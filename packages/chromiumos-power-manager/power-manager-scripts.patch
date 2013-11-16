@@ -51,4 +51,12 @@ diff -Naur1 power_manager/tools/suspend_stress_test power_manager-scripts/tools/
  
 -. /usr/share/misc/shflags
 +. /usr/share/lib/shflags/shflags.sh
+
+diff -Naur1 power_manager/powerd/powerd_suspend power_manager-scripts/powerd/powerd_suspend
+--- power_manager/powerd/powerd_suspend	2013-11-15 17:35:53.255000475 -0900
++++ power_manager-scripts/powerd/powerd_suspend	2013-11-15 17:37:39.930000526 -0900
+@@ -9,3 +9,3 @@
+ 
+-. /usr/share/misc/shflags
++. /usr/share/lib/shflags/shflags.sh
  
