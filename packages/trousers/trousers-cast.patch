@@ -1,0 +1,12 @@
+diff -Naur trousers/src/tspi/tspi_aik.c trousers-fix/src/tspi/tspi_aik.c
+--- trousers/src/tspi/tspi_aik.c	2013-04-07 11:09:47.510005456 -0800
++++ trousers-fix/src/tspi/tspi_aik.c	2013-04-07 11:14:28.815005548 -0800
+@@ -482,7 +482,7 @@
+ 						      FALSE, &digest, &ownerAuth)))
+ 			return result;
+ 	} else {
+-		if ((result = authsess_xsap_init(tspContext, hTPM, NULL,
++		if ((result = authsess_xsap_init(tspContext, hTPM, 0,
+ 						 TSS_AUTH_POLICY_REQUIRED,
+ 						 TPM_ORD_ActivateIdentity,
+ 						 TPM_ET_OWNER, &xsap)))
