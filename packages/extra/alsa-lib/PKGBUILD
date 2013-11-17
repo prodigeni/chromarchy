@@ -22,6 +22,6 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir" install
-  rm -rf "$pkgdir/usr/share/alsa/ucm/D*"
+  rm -rf "$pkgdir/usr/share/alsa/ucm/DAISY-I2S"
 }
 md5sums=('69129a7c37697f81ac092335e9fa452b')
