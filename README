@@ -1,12 +1,89 @@
-Chromarchy
-==========
+CHROMARCHY
 
-Chromarchy is a GNU/Linux distribution for [Chromebooks][chromebook].  It
-builds on [Arch Linux][archlinux] and [Arch Linux Arm][alarm] by providing
-a distribution installer and by providing packages for software included
-in Google's [Chromium OS][chromiumos] and Chrome OS.
+  Chromarchy is a GNU/Linux distribution for Chromebooks.  It builds on Arch
+  Linux and Arch Linux ARM by providing a distribution installer and by
+  providing packages for software included in Google's Chromium OS and
+  Chrome OS.
 
-[chromebook]: http://www.google.com/chromebook
-[archlinux]: https://www.archlinux.org/
-[alarm]: http://archlinuxarm.org/
-[chromiumos]: http://www.chromium.org/chromium-os
+PURPOSE
+
+  Chrome OS and Chromium OS include software useful for the operation of
+  Chromebook devices.  The power manager and audio server are great examples
+  of this, as they are both simple, powerful, efficient, and tailored
+  specifically to Chromebooks.  Chromarchy decouples these and other tools
+  from Chrome/Chromium OS and integrates them into a more traditional
+  GNU/Linux distribution.
+
+  Chrome OS also depends on proprietary software for certain functionality
+  like graphics hardware support.  Chromarchy might facilitate the use of
+  these blobs in a more traditional setting.  Support for Flash and
+  accelerated OpenGL may be possible and is a goal.
+
+STATUS
+
+  Chromarchy is currently in alpha status.  There is currently only support
+  for Samsung ARM Chromebooks and HP Chromebook 11s, but support for other
+  devices is planned.
+
+INSTALLING
+
+  A primitive and fragile installer, chromarchy_install, is available in
+  this repository.  The installer
+
+    - Partitions the target storage device and creates only a kernel and
+      root partition.
+
+    - Creates a minimal bootstrap environment in /bootstrap containing only
+      the files necessary to run pacman.
+
+    - Installs the packages needed to build/install the Chromarchy packages.
+
+    - Installs Chromarchy packages and enables Chromarchy services.
+
+  The installer can be run from Chrome OS or any reasonable GNU/Linux
+  distribution.  Installing to the internal SSD is a two-stage process, as
+  the final installation must be run from an external USB or MMC storage
+  device.
+
+  Usage: chromarchy_install -b BOARD -u USB_DEVICE [-r REPO]
+         chromarchy_install -b BOARD -m MMC_DEVICE [-r REPO]
+
+  The supported boards are "daisy" (for Samsung ARM Chromebooks) and
+  "daisy-spring" (for HP Chromebook 11s)
+
+  Examples:
+
+   - To install to the USB device at /dev/sda
+     sudo bash chromarchy_install -b daisy-spring -u /dev/sda
+   - To install to the internal SSD from a USB device
+     sudo bash chromarchy_install -b daisy-spring -m /dev/mmcblk0
+
+FREE AND NON-FREE PACKAGES
+
+  Free packages are provided through the Chromarchy repository at
+  ftp://ftp.chromium.org/.  Non-free packages are built from Chrome OS
+  recovery images through AUR.
+
+INFORMATION ON SELECTED PACKAGES
+
+  chromeos-recovery-$BOARD
+
+    The chromeos-recovery packages download recovery images from Google and
+    keep them in /usr/share/chromeos-recovery.  Other non-free packages
+    mount or otherwise tap into the image to facilitate the installation of
+    non-free Chrome OS software.
+
+    Building and installing the package involves several redundant
+    extractions and archivings of the large image file which takes some
+    time.
+
+  chromiumos-power-manager
+
+    backlight_tool can query and change the screen's backlight brightness.
+
+  cras-$BOARD
+
+    The Chromium OS audio server masks the complexity of the audio controls
+    presented by traditional ALSA.  It also automatically switches between
+    headphone and speaker outputs based on audio plug status.
+
