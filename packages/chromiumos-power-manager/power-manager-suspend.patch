@@ -1,0 +1,24 @@
+diff -Naur1 power_manager/powerd/powerd_suspend power_manager-suspend/powerd/powerd_suspend
+--- power_manager/powerd/powerd_suspend	2013-11-15 17:48:19.480000830 -0900
++++ power_manager-suspend/powerd/powerd_suspend	2013-11-16 15:00:57.060362814 -0900
+@@ -124,12 +124,4 @@
+ saw_wakeup_event() {
+-    if [ "${FLAGS_wakeup_count}" -eq -1 ] ||
+-       echo "${FLAGS_wakeup_count}" > "/sys/power/wakeup_count"; then
+-        cancel=0
+-        return 1
+-    else
+-        log_msg "Aborting suspend, wake event received"
+-        log_wakeup_count
+-        cancel=1
+-        return 0
+-    fi
++  cancel=0
++  return 1
+ }
+@@ -278,5 +270,2 @@
+ 
+-# Refresh mosys eventlog to help feedback reports pick up the latest snapshot.
+-/usr/share/userfeedback/scripts/eventlog &
+-
+ log_msg "Resume finished"

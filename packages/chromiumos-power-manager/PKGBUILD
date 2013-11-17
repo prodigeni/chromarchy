@@ -21,6 +21,7 @@ source=(power-manager-stack.patch
         power-manager-utmp.patch
         power-manager-scripts.patch
         power-manager-oobe.patch
+        power-manager-suspend.patch
         powerd.service
         useractd.c
         useractd.service
@@ -33,6 +34,7 @@ md5sums=('b2f15e9f1002389c1f6db7cef8bc08d2'
          '5d61037e6c04fd68a8aa75a07866e8b2'
          '37f9651dfd1e884822373fe17523157d'
          '65a2c5d81e53883dddeea0d57fd247d3'
+         'ef2b61333eac645f4e7926354d24c3a7'
          '2e59e3f5d71da17d8ec2fa0f6d233c0b'
          '0796112cd6519fb94e84acc34be51250'
          '5e4935c4b51374ab5522eb0c337b07b7'
@@ -47,6 +49,7 @@ prepare() {
   git apply ${srcdir}/power-manager-utmp.patch
   git apply ${srcdir}/power-manager-scripts.patch
   git apply ${srcdir}/power-manager-oobe.patch
+  git apply ${srcdir}/power-manager-suspend.patch
 }
 
 build() {
