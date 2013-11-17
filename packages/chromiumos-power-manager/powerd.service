@@ -8,7 +8,7 @@ Before=useractd.service
 [Service]
 Type=dbus
 BusName=org.chromium.PowerManager
-ExecStart=/bin/sh -c 'mkdir -p /var/run/power_manager/power; /usr/bin/powerd --prefs_dir=/var/lib/power_manager  --default_prefs_dir=/usr/share/power_manager --log_dir=/var/log/power_manager --run_dir=/var/run/power_manager/power > /var/log/powerd.out 2>&1'
+ExecStart=/bin/sh -c 'mkdir -p /var/run/power_manager/root; /usr/bin/powerd --prefs_dir=/var/lib/power_manager  --default_prefs_dir=/usr/share/power_manager --log_dir=/var/log/power_manager --run_dir=/var/run/power_manager/root > /var/log/powerd.out 2>&1'
 
 [Install]
 WantedBy=multi-user.target
