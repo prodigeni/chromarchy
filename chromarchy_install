@@ -1,0 +1,284 @@
+#!/bin/bash
+#
+# Partition a storage device and install Chromarchy to it
+
+readonly SUPPORTED_BOARDS="daisy|daisy-spring"
+repo='mirror.archlinuxarm.org'
+
+err() {
+  echo "$@" >&2
+}
+
+usage() {
+  err "Usage: $(basename $0) -b BOARD -u USB_DEVICE [-r REPO]"
+  err "       $(basename $0) -b BOARD -m MMC_DEVICE [-r REPO]"
+}
+
+get_uuid() {
+  cgpt show "${DEVICE}" | awk '$3 == 2 { seen = 1} \
+                           /UUID/ { if (seen == 1) { print $2; exit } }'
+}
+
+prepare_device() {
+  umount ${DEVICE}* || true
+
+  yes Yes | parted "${DEVICE}" mklabel gpt
+
+  cgpt create -z "${DEVICE}"
+  cgpt create "${DEVICE}"
+  cgpt boot -p "${DEVICE}"
+
+  local max_size=`cgpt show "${DEVICE}" | grep "Sec GPT table"|awk '{ print $1 }'`
+
+  cgpt add -i 1 -t kernel -b 4096 -s 32768 -l chromarchy-kernel \
+    -S 1 -T 5 -P 10 "${DEVICE}"
+  cgpt add -i 2 -t rootfs -b 36864 -s `expr "${max_size}" - 40960` \
+    -l chromarchy-root "${DEVICE}"
+
+  partprobe "${DEVICE}"
+
+  mkfs.ext4 "${root_part}"
+}
+
+extract_href() {
+  sed -n '/<a / s/^.*<a [^>]*href="\([^\"]*\)".*$/\1/p';
+}
+
+uncompress() {
+  local path="$1"
+  local dest="$2"
+
+  case "${path}" in
+    *.gz) tar xzf "${path}" -C "${dest}";;
+    *.xz) xz -dc "${path}" | tar x -C "${dest}";;
+  esac
+}
+
+minimal_configuration() {
+  local dest="$1"
+
+  mkdir -p "${dest}/dev"
+
+  echo "root:x:0:0:root:/root:/bin/bash" > "${dest}/etc/passwd"
+  echo 'root:$1$GT9AUpJe$oXANVIjIzcnmOpY07iaGi/:14657::::::' \
+    > "${dest}/etc/shadow"
+  touch "${dest}/etc/group"
+  echo 'bootstrap' > "${dest}/etc/hostname"
+  test -e "${dest}/etc/mtab" || echo 'rootfs / rootfs rw 0 0' > "${dest}/etc/mtab"
+  test -e "${dest}/dev/null" || mknod "${dest}/dev/null" c 1 3
+  test -e "${dest}/dev/random" || mknod -m 0644 "${dest}/dev/random" c 1 8
+  test -e "${dest}/dev/urandom" || mknod -m 0644 "${dest}/dev/urandom" c 1 9
+  sed -i 's/^[[:space:]]*\(CheckSpace\)/# \1/' "${dest}/etc/pacman.conf"
+  sed -i 's/^[[:space:]]*SigLevel[[:space:]]*=.*$/SigLevel = Never/' \
+    "${dest}/etc/pacman.conf"
+}
+
+arch_bootstrap() {
+  local ARCH='armv7h'
+  local repo_url="${repo}/${ARCH}/core"
+
+  local PACMAN_PACKAGES=(
+    acl archlinux-keyring attr bash bzip2 curl expat glibc gpgme libarchive
+    libassuan libgpg-error libssh2 lzo2 openssl pacman pacman-mirrorlist
+    xz zlib grep gcc-libs filesystem readline
+  )
+
+  local bootstrap_dir="${root_mount}/bootstrap"
+  mkdir -p "${bootstrap_dir}"
+  mkdir -p "${bootstrap_dir}/pkg"
+
+  wget -O - "${repo_url}" | extract_href > "${bootstrap_dir}/pkg/packagelist"
+
+  for package in ${PACMAN_PACKAGES[*]}; do
+    local file
+    file=$(grep -m1 "^${package}-[[:digit:]].*\(\.gz\|\.xz\)$" "${bootstrap_dir}/pkg/packagelist")
+    local file_path="${bootstrap_dir}/pkg/${file}"
+    if ! [[ -e "${file_path}" ]]; then
+      wget -O "${file_path}" "${repo_url}/${file}"
+    fi
+    uncompress "${file_path}" "${bootstrap_dir}"
+  done
+
+  cp /etc/resolv.conf "${bootstrap_dir}/etc/resolv.conf"
+  minimal_configuration "${bootstrap_dir}"
+
+  local new_root_mount="${bootstrap_dir}/newroot"
+  mkdir -p "${new_root_mount}"
+  mount -o bind "${root_mount}" "${new_root_mount}"
+
+  mkdir -m 0755 -p "${new_root_mount}"/var/cache/pacman/pkg
+  mkdir -m 0755 -p "${new_root_mount}"/var/lib/pacman
+  mkdir -m 0755 -p "${new_root_mount}"/var/log
+  mkdir -m 0755 -p "${new_root_mount}"/dev
+  mkdir -m 0755 -p "${new_root_mount}"/run
+  mkdir -m 0755 -p "${new_root_mount}"/etc
+  mkdir -m 1777 -p "${new_root_mount}"/tmp
+  mkdir -m 0555 -p "${new_root_mount}"/sys
+  mkdir -m 0555 -p "${new_root_mount}"/proc
+
+  LC_ALL=c chroot "${bootstrap_dir}" /usr/bin/pacman -r /newroot --noconfirm \
+    --arch "${ARCH}" -Sy filesystem
+  LC_ALL=c chroot "${bootstrap_dir}" /usr/bin/pacman -r /newroot --noconfirm \
+    --arch "${ARCH}" -Sy base base-devel wpa_supplicant
+
+  umount "${new_root_mount}"
+}
+
+setup_dependencies() {
+  mv "${root_mount}/etc/resolv.conf" "${root_mount}/etc/resolv.conf.orig"
+  cp /etc/resolv.conf "${root_mount}/etc/resolv.conf"
+  mount -o bind /proc "${root_mount}/proc"
+  mount -o bind /dev "${root_mount}/dev"
+}
+
+cleanup_dependencies() {
+  umount "${root_mount}/dev"
+  umount "${root_mount}/proc"
+  mv "${root_mount}/etc/resolv.conf.orig" "${root_mount}/etc/resolv.conf"
+}
+
+install_aur() {
+  local pkgname="$1"
+
+  local sub
+  sub=$(echo ${pkgname} | sed 's/^\(..\).*$/\1/')
+  local aur_url='https://aur.archlinux.org/packages'
+  local pkg_url="${aur_url}/${sub}/${pkgname}/${pkgname}.tar.gz"
+  wget -O "${root_mount}/bootstrap/${pkgname}.tar.gz" "${pkg_url}"
+  (cd ${root_mount}/bootstrap && tar xzvf "${pkgname}.tar.gz")
+  LC_ALL=C chroot ${root_mount} /usr/bin/bash -c \
+    "MAKEFLAGS=-j3 cd /bootstrap/${pkgname} && makepkg --noconfirm --asroot -siA"
+}
+
+install_kernel() {
+  local uuid="$1"
+
+  echo 'lsm.module_locking=0 console=tty1 consoleblank=0 printk.time=1 ' \
+    'loglevel=5 nosplash rootwait rootfstype=ext4 rw ' \
+    "init=/usr/lib/systemd/systemd root=PARTUUID=${uuid}" \
+    > "${root_mount}/boot/cmdline-linux-chromeos"
+
+  chroot "${root_mount}" linux-chromeos-install "${DEVICE}" "${kernal_part}" 1
+}
+
+chromarchy_repo() {
+  awk '/^\[core\]$/ {
+         print "[chromarchy]"
+         print "Server = ftp://ftp.chromarchy.org/armv7h/$repo"
+         print ""
+         print $0
+         next
+       }
+
+       {
+         print $0
+       }
+      ' < "${root_mount}/etc/pacman.conf" > "${root_mount}/etc/pacman.conf.new"
+  mv "${root_mount}/etc/pacman.conf.new" "${root_mount}/etc/pacman.conf"
+  chroot "${root_mount}" /usr/bin/pacman -Syy
+}
+
+process_opts() {
+  while getopts ':b:u:m:r:' flag; do
+    case "${flag}" in
+      b)
+        BOARD="${OPTARG}"
+        if ! [[ "${BOARD}" =~ ${SUPPORTED_BOARDS} ]]; then
+          err "Invalid board: ${BOARD}"
+          exit 1
+        fi
+        ;;
+      u)
+        if [[ "${DEVICE_TYPE}" = 'mmc' ]]; then
+          err 'Invalid options: -u and -m are mutually exclusive'
+        fi
+        DEVICE="${OPTARG}"
+        DEVICE_TYPE='usb'
+        ;;
+      m)
+        if [[ "${DEVICE_TYPE}" = 'usb' ]]; then
+          err 'Invalid options: -u and -m are mutually exclusive'
+        fi
+        DEVICE="${OPTARG}"
+        DEVICE_TYPE='mmc'
+        ;;
+      r)
+        repo=$OPTARG
+        ;;
+      \?)
+        err "Invalid option: -${OPTARG}"
+        exit 1
+        ;;
+      :)
+        err "Option -${OPTARG} requires an argument."
+        exit 1
+        ;;
+    esac
+  done
+
+  if [[ -z "${BOARD}" ]] || [[ -z "${DEVICE}" ]]; then
+    usage
+    exit 1
+  fi
+  
+  if [[ "${DEVICE_TYPE}" = 'usb' ]]; then
+    kernal_part="${DEVICE}1"
+    root_part="${DEVICE}2"
+  fi
+  
+  if [[ "${DEVICE_TYPE}" = 'mmc' ]]; then
+    kernal_part="${DEVICE}p1"
+    root_part="${DEVICE}p2"
+  fi
+  
+  echo "WARNING: All data on ${DEVICE} will be lost.  Do you want to continue?"
+  echo -n 'Type "yes" to continue: '
+  read answer
+  if [[ "${answer}" != 'yes' ]]; then
+    exit 1
+  fi
+}
+
+main() {
+  process_opts "$@"
+
+  prepare_device "${DEVICE}"
+
+  local root_uuid
+  root_uuid=$(get_uuid "${root_part}")
+
+  root_mount=$(mktemp -d)
+  mount "${root_part}" "${root_mount}"
+
+  arch_bootstrap
+
+  setup_dependencies
+
+  chromarchy_repo
+
+  chroot "${root_mount}" /usr/bin/pacman --noconfirm -S alsa-lib \
+    libevdev xf86-video-armsoc gflags gmock shflags chromiumos-libbase \
+    vboot-utils chromiumos-power-manager chromiumos-metrics trousers \
+    xf86-input-cmt chromiumos-librootdev chromiumos-system-api \
+    "cras-${BOARD}" chromiumos-xorg-conf-daisy chromiumos-bsp-daisy \
+    chromium-proto libchromeos chromiumos-overlay libgestures
+
+  chroot "${root_mount}" systemctl enable cras
+  chroot "${root_mount}" systemctl enable powerd
+
+  install_aur "chromeos-recovery-${BOARD}"
+  install_aur chromeos-devkeys
+  install_aur linux-chromeos
+  install_aur linux-firmware-chromeos
+
+  install_kernel "${root_uuid}"
+
+  cleanup_dependencies
+
+  umount "${root_part}"
+
+  sync
+}
+
+main "$@"
+
