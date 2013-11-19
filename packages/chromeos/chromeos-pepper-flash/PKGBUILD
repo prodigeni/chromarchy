@@ -1,7 +1,11 @@
+# Maintainer: Thomas Sowell <tom@fancydriving.org>
+# Adopted from the package by
 # Maintainer: ava1ar <mail(at)ava1ar(dot)info>
 
-pkgname=chromium-pepper-flash-stable
-pkgdesc="Google Chrome's Pepper Flash plugin for Chromium (stable version)"
+buildarch=1
+
+pkgname=chromeos-pepper-flash
+pkgdesc="Google Chrome's Pepper Flash plugin for Chrome OS"
 pkgver=11.8.800.170
 pkgrel=2
 epoch=2
@@ -11,7 +15,6 @@ url="http://www.google.com/chrome"
 license=('custom:chrome')
 depends=('chromium')
 provides=("chromium-pepper-flash=${pkgver}")
-optdepends=('pulseaudio-alsa: For PulseAudio users')
 install=chromium-pepper-flash.install
 source=(license.html::http://www.google.com/chrome/intl/en/eula_text.html)
 sha1sums=('SKIP')
