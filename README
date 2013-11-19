@@ -25,13 +25,41 @@ STATUS
   for Samsung ARM Chromebooks and HP Chromebook 11s, but support for other
   devices is planned.
 
+SUPPORT
+
+  You can support Chromarchy by
+
+    - Using it and reporting issues.
+
+    - Implementing and submitting support for other Chromebook devices.
+
+    - Donating to offset costs of hosting and device acquisition.
+      Donations are accepted via PayPal (tom@fancydriving.org) or
+      Bitcoin (13hQ2h6EpvpFSB4CsdpUcx4wKxXHw2Te6u).
+
+PACKAGE REPOSITORY
+
+  Free packages are provided through the Chromarchy repository at
+  ftp://ftp.chromium.org/.  Non-free packages are built from Chrome OS
+  recovery images through AUR.
+
+  To use the Chromarchy repository, add to /etc/pacman.conf before the stock
+  repositories
+
+    [chromarchy]
+    Server = ftp://ftp.chromarchy.org/armv7h/$repo
+
 INSTALLING
+
+  Your Chromebook must be in developer mode.  Instructions for enabling
+  developer mode can be found at
+  http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices
 
   A primitive and fragile installer, chromarchy_install, is available in
   this repository.  The installer
 
     - Partitions the target storage device and creates only a kernel and
-      root partition.
+      a root partition.
 
     - Creates a minimal bootstrap environment in /bootstrap containing only
       the files necessary to run pacman.
@@ -58,13 +86,11 @@ INSTALLING
    - To install to the internal SSD from a USB device
      sudo bash chromarchy_install -b daisy-spring -m /dev/mmcblk0
 
-FREE AND NON-FREE PACKAGES
+  After booting into your Chromarchy installation, you'll still need to set
+  up your locales, timezone, etc. for which the Arch installation guide at
+  https://wiki.archlinux.org/index.php/Installation_Guide may be helpful.
 
-  Free packages are provided through the Chromarchy repository at
-  ftp://ftp.chromium.org/.  Non-free packages are built from Chrome OS
-  recovery images through AUR.
-
-INFORMATION ON SELECTED PACKAGES
+SELECTED INFORMATION ON SELECTED PACKAGES
 
   chromeos-recovery-$BOARD
 
@@ -77,9 +103,53 @@ INFORMATION ON SELECTED PACKAGES
     extractions and archivings of the large image file which takes some
     time.
 
+    This package is only available in the Arch Linux AUR.
+
+  vboot-utils
+
+    Provides tools for working with verified boot.  cgpt creates and
+    modifies GPT headers and partitions.  
+
+  chromeos-devkeys
+
+    Installs from the recovery image the keys used by linux-chromeos to sign
+    the kernel image.
+
+    This package is only available in the Arch Linux AUR.
+
+  linux-chromeos and linux-firmware-chromeos
+
+    The kernel image and binary modules are installed to the filesystem from
+    the recovery image.  The kernel is not installed to a kernel partition,
+    but a simple script, linux-chromeos-install, is provided to do so.
+
+    Usage: linux-chromeos-install DEVICE PARTITION PARTITION-NUMBER
+
+    Example:
+
+     - To install to /dev/sda1
+       sudo linux-chromeos-install /dev/sda /dev/sda1 1
+
+    linux-chromeos-install uses the command-line arguments installed in
+    /boot/cmdline which do _not_ contain a root argument, and you must add
+    one in order to boot the kernel.  UUIDs are preferred, especially if
+    booting from a removable device.  You can find the UUIDs of your
+    partitions by running "cgpt show $DEVICE" and add it to the command-line
+    arguments by adding "root=PARTUUID=$UUID" to
+    /boot/cmdline-linux-chromeos.
+
+    The installer handles this for you.
+
+    This package is only available in the Arch Linux AUR.
+
   chromiumos-power-manager
 
+    The Chromium OS power manager.  Detailed information is available at
+    http://www.chromium.org/chromium-os/packages/power_manager
+
     backlight_tool can query and change the screen's backlight brightness.
+
+    power_supply_info prints power supply information.
 
   cras-$BOARD
 
@@ -87,3 +157,20 @@ INFORMATION ON SELECTED PACKAGES
     presented by traditional ALSA.  It also automatically switches between
     headphone and speaker outputs based on audio plug status.
 
+  xf86-input-cmt and libgestures
+
+    Provide touchpad support.  One-finger, two-finger, and three-finger
+    clicking are functional, but two-finger scrolling is currently not.
+
+  chromarchy-xorg-conf-$BOARD
+
+    Installs device-specific Xorg configuration files including touchpad and
+    graphics driver parameters.
+
+  chromeos-pepper-flash
+
+    Installs Pepper Flash from the recovery image.  The Netflix helper
+    doesn't work (at least) out of the box, but it may be possible to remedy
+    that.
+
+    This package is only available in the Arch Linux AUR.
