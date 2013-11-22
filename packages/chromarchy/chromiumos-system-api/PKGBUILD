@@ -6,7 +6,7 @@ pkgname=chromiumos-system-api
 pkgdesc="Chromium OS D-Bus constants and definitions"
 pkgver=R30.4537
 pkgrel=1
-arch=('any')
+arch=('armv7h')
 groups=('chromarchy')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/system_api.git;a=summary"
 license=('custom:chromiumos')

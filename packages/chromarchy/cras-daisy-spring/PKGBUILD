@@ -6,7 +6,7 @@ pkgname=cras-daisy-spring
 pkgdesc="Chromium OS audio server"
 pkgver=R30.4537
 pkgrel=1
-arch=('any')
+arch=('armv7h')
 groups=('chromarchy')
 url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/adhd.git;a=summary"
 license=('custom:chromiumos')

@@ -6,7 +6,7 @@ pkgname=libchromeos
 pkgdesc="libchromeos"
 pkgver=R30.4537
 pkgrel=1
-arch=('any')
+arch=('armv7h')
 groups=('chromarchy')
 url="http://git.chromium.org/gitweb/?p=chromiumos/platform/libchromeos;a=summary"
 license=('custom:chromiumos')

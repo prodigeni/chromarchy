@@ -6,7 +6,7 @@ pkgname=chromium-proto
 pkgdesc="Chromium OS device policies"
 pkgver=R30.3547
 pkgrel=1
-arch=('any')
+arch=('armv7h')
 groups=('chromarchy')
 url="http://git.chromium.org/gitweb/?p=chromium/src/chrome/browser/policy/proto.git;a=summary"
 license=('custom:chromium')
