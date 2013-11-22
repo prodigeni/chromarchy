@@ -7,7 +7,6 @@ pkgdesc="Open-source X.org graphics driver for TI OMAP graphics"
 pkgver=R30.4537
 pkgrel=1
 arch=('armv7h')
-groups=('chromarchy')
 url="http://git.chromium.org/gitweb/?p=chromiumos/third_party/xf86-video-armsoc.git;a=summary"
 license=('custom')
 _gitname='xf86-video-armsoc'

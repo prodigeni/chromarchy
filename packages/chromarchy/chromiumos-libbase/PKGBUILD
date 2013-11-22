@@ -7,7 +7,6 @@ pkgdesc="Common shared library code for Chromium OS"
 pkgver=R30.4537
 pkgrel=1
 arch=('armv7h')
-groups=('chromarchy')
 url="https://src.chromium.org/chrome/trunk/src/base"
 license=('custom:chromium')
 _svnname='base'
