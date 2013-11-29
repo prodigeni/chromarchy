@@ -119,7 +119,7 @@ arch_bootstrap() {
   LC_ALL=c chroot "${bootstrap_dir}" /usr/bin/pacman -r /newroot --noconfirm \
     --arch "${ARCH}" -Sy filesystem
   LC_ALL=c chroot "${bootstrap_dir}" /usr/bin/pacman -r /newroot --noconfirm \
-    --arch "${ARCH}" -Sy base base-devel wpa_supplicant
+    --arch "${ARCH}" -Sy base base-devel wpa_supplicant parted
 
   umount "${new_root_mount}"
 }
