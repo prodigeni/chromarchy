@@ -35,7 +35,7 @@ SUPPORT
 
     - Donating to offset costs of hosting and device acquisition.
       Donations are accepted via PayPal (tom@fancydriving.org) or
-      Bitcoin (13hQ2h6EpvpFSB4CsdpUcx4wKxXHw2Te6u).
+      Bitcoin (1Dv6CsyxFEwUrJdqVYegvey6oGTJ6h8j4b).
 
 PACKAGE REPOSITORY
 
@@ -49,11 +49,7 @@ PACKAGE REPOSITORY
     [chromarchy]
     Server = ftp://ftp.chromarchy.org/armv7h/$repo
 
-INSTALLING
-
-  Your Chromebook must be in developer mode.  Instructions for enabling
-  developer mode can be found at
-  http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices
+INSTALLER
 
   A primitive and fragile installer, chromarchy_install, is available in
   this repository.  The installer
@@ -89,6 +85,42 @@ INSTALLING
   After booting into your Chromarchy installation, you'll still need to set
   up your locales, timezone, etc. for which the Arch installation guide at
   https://wiki.archlinux.org/index.php/Installation_Guide may be helpful.
+
+INSTALLATION INSTRUCTIONS FROM CHROMEOS
+
+  Your Chromebook must be in developer mode.  Instructions for enabling
+  developer mode can be found at
+  http://www.chromium.org/chromium-os/developer-information-for-chrome-os-devices
+
+  Once in developer mode, you need to enable booting from external drives.
+  To do so from ChromeOS
+
+    1. Press Ctrl-Alt-T to open a crosh session
+    2. Start a shell session:
+       crosh> shell
+    3. Enable external booting:
+       chronos@localhost / $ sudo crossystem dev_boot_usb=1"
+
+  In developer mode, your Chromebook will display a splash screen instead of
+  booting immediately.  At the splash screen, you can press Ctrl-D to boot
+  from internal storage or Ctrl-U to boot from an external SD card or USB
+  drive.
+
+  With developer mode and external booting enabled, to install Chromarchy,
+
+    1. Press Ctrl-Alt-T to open a crosh session
+    2. Start a shell session:
+       crosh> shell
+    3. Change to your home directory:
+       chronos@localhost / $ cd ~
+    4. Download the intaller:
+       chronos@localhost ~ $ wget https://raw.github.com/tsowell/chromarchy/master/chromarchy_install
+    5. Install Chromarchy to the USB drive (Samsung ARM Chromebook):
+       chronos@localhost ~ $ sudo bash chromarchy_install -b daisy -u /dev/sda
+       Or install Chromarchy to the USB drive (HP Chromebook 11):
+       chronos@localhost ~ $ sudo bash chromarchy_install -b daisy-spring -u /dev/sda
+    6. Reboot the Chromebook and press Ctrl-U at the splash screen to boot
+       into Chromarchy
 
 SELECTED INFORMATION ON SELECTED PACKAGES
 
