@@ -66,6 +66,9 @@ INSTALLER
 
     - Installs Chromarchy packages and enables Chromarchy services.
 
+  The installer requires a target device of at least 6G, but the /bootstrap
+  directory can be removed after installation to free up ~3.5G.
+
   The installer can be run from Chrome OS or any reasonable GNU/Linux
   distribution.  Installing to the internal SSD is a two-stage process, as
   the final installation must be run from an external USB or MMC storage
