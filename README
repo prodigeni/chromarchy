@@ -99,7 +99,7 @@ INSTALLATION INSTRUCTIONS FROM CHROMEOS
     2. Start a shell session:
        crosh> shell
     3. Enable external booting:
-       $ sudo crossystem dev_boot_usb=1"
+       sudo crossystem dev_boot_usb=1
 
   In developer mode, your Chromebook will display a splash screen instead of
   booting immediately.  At the splash screen, you can press Ctrl-D to boot
@@ -112,13 +112,13 @@ INSTALLATION INSTRUCTIONS FROM CHROMEOS
     2. Start a shell session:
        crosh> shell
     3. Change to your home directory:
-       $ cd ~
+       cd ~
     4. Download the intaller:
-       $ wget https://raw.github.com/tsowell/chromarchy/master/chromarchy_install
+       wget https://raw.github.com/tsowell/chromarchy/master/chromarchy_install
     5. Install Chromarchy to the USB drive (Samsung ARM Chromebook):
-       $ sudo bash chromarchy_install -b daisy -u /dev/sda
+       sudo bash chromarchy_install -b daisy -u /dev/sda
        Or install Chromarchy to the USB drive (HP Chromebook 11):
-       $ sudo bash chromarchy_install -b daisy-spring -u /dev/sda
+       sudo bash chromarchy_install -b daisy-spring -u /dev/sda
     6. Reboot the Chromebook and press Ctrl-U at the splash screen to boot
        into Chromarchy
 
