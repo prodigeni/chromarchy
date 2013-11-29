@@ -22,7 +22,7 @@ source=(cras.service
         LICENSE
         "$_gitname::git+http://git.chromium.org/git/chromiumos/third_party/adhd.git#branch=release-R30-4537.B")
 
-md5sums=('3f0d0ba389795cb4bafea8d584652bd5'
+md5sums=('af12775646abbea7210d5e0451b7bd4b'
          'f44dd92bf89da8d192d0d0a8b0fba442'
          '113dbdf7e1e931ba6288c255c7c287dc'
          'e5487745f964f37d487c095bcff56d0f'
