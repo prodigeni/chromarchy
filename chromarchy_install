@@ -87,7 +87,10 @@ arch_bootstrap() {
   mkdir -p "${bootstrap_dir}"
   mkdir -p "${bootstrap_dir}/pkg"
 
-  wget -O - "${repo_url}" | extract_href > "${bootstrap_dir}/pkg/packagelist"
+  # Apparently this doesn't work on all alarm mirrors
+  while ! [[ -s "${bootstrap_dir}/pkg/packagelist" ]]; do
+    wget -O - "${repo_url}" | extract_href > "${bootstrap_dir}/pkg/packagelist"
+  done
 
   for package in ${PACMAN_PACKAGES[*]}; do
     local file
